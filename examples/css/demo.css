@@ -2,6 +2,10 @@
   width: 75%;
 }
 
+#main_content {
+  max-width: 100%;
+}
+
 .cloudinary-metadata input {
   display: block;
   margin: 10px;
@@ -16,17 +20,19 @@
   width: 100%;
 }
 
-.crop-canvas {
-  float: left;
-}
-
 .crop-selections {
   float: left;
+  color: #f2f2f2;
 }
 
 .crop-selections p {
   padding: 7px;
 }
+
+.crop-selections p.instructions {
+  padding: 25px 0;
+}
+
 
 .crop-selections .save-crop {
   float: left;

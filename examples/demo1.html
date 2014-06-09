@@ -1,5 +1,11 @@
 <html>
   <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Cloudinary jcropper : JCrop photo cropper geared towards cloudinary transformations" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
+
     <script src="../vendor/jquery/dist/jquery.js"></script>
     <script src="../vendor/underscore/underscore.js"></script>
     <script src="../lib/jquery.jcrop.js"></script>
@@ -8,37 +14,57 @@
 
     <link rel="stylesheet" href="css/jquery.jcrop.css">
     <link rel="stylesheet" href="css/demo.css">
+
+    <title>Cropper Demo 1</title>
   </head>
 
   <body>
-    <div class="cloudinary-metadata">
-      Enter information on the cloudinary image you'd like to crop:
-      <input type="text" id="cloudinary-image-url" placeholder="Enter Cloudinary image URL (http://res.cloudinary.com/my-cloud-name/image/upload/v1399562437/okkrojqqgmezu0dllvhm.jpg)" />
-      <input type="text" id="cloudinary-image-orig-width" placeholder="Enter Cloudinary image original width" />
-      <input type="text" id="cloudinary-image-orig-height" placeholder="Enter Cloudinary image original height" />
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/spra85/cloudinary_jcropper">View on GitHub</a>
 
-      <button type="button" id="set-cloudinary-image">Set image to crop</button>
+          <h1 id="project_title">Cloudinary jcropper</h1>
+          <h2 id="project_tagline">JCrop photo cropper geared towards cloudinary transformations</h2>
+        </header>
     </div>
 
-    <div class="photo-cropper">
-      <div class="crop-canvas">
-        <img id="article-primary-photo" class="photo-cropper-original-photo" data-original-height="" data-original-width="" src="http://placehold.it/800x400" width="800">
-      </div>
-      <div class="crop-selections">
-        <a class="save-crop" href="#">Save Crop</a>
-        <input id="crops" name="crops" type="hidden" value="{}">
-        <p>Preview</p>
-        Stored crop info:
-        <pre id="demo-crop-info"></pre>
-        <div class="primary">
-          <p>Primary</p>
-          <img class="crop-selection" data-crop-type="primary" id="primary-crop" src="http://placehold.it/645x375">
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <div class="cloudinary-metadata">
+          Enter information on the cloudinary image you'd like to crop:
+          <input type="text" id="cloudinary-image-url" placeholder="Enter Cloudinary image URL (http://res.cloudinary.com/my-cloud-name/image/upload/v1399562437/okkrojqqgmezu0dllvhm.jpg)" />
+          <input type="text" id="cloudinary-image-orig-width" placeholder="Enter Cloudinary image original width" />
+          <input type="text" id="cloudinary-image-orig-height" placeholder="Enter Cloudinary image original height" />
+
+          <button type="button" id="set-cloudinary-image">Set image to crop</button>
         </div>
-        <div class="thumbnail">
-          <p>Thumbnail</p>
-          <img class="crop-selection" data-crop-type="thumbnail" id="thumbnail-crop" src="http://placehold.it/60x60">
+
+        <div class="photo-cropper">
+          <div class="crop-canvas">
+            <img id="article-primary-photo" class="photo-cropper-original-photo" data-original-height="" data-original-width="" src="http://placehold.it/800x400" width="800">
+          </div>
+          <div class="crop-selections">
+            <a class="save-crop" href="#">Save Crop</a>
+            <input id="crops" name="crops" type="hidden" value="{}">
+            <p class="instructions">
+              Click the 'Primary' or 'Thumbnail' image placeholders below to interact with a crop of the original.  Once finished, click 'Save Crop' to see the result.
+            </p>
+            Stored crop info:
+            <pre id="demo-crop-info"></pre>
+            <div class="primary">
+              <p>Primary</p>
+              <img class="crop-selection" data-crop-type="primary" id="primary-crop" src="http://placehold.it/645x375">
+            </div>
+            <div class="thumbnail">
+              <p>Thumbnail</p>
+              <img class="crop-selection" data-crop-type="thumbnail" id="thumbnail-crop" src="http://placehold.it/60x60">
+            </div>
+            <div class="clearfix"></div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
 
     <script type="text/javascript">
