@@ -6,7 +6,9 @@ JCrop photo cropper geared towards cloudinary transformations
 Getting started
 ===========
 
-`bower install`
+Installs underscore & jquery: `bower install`
+
+Installs the jasmine gem for testing: `bundle install`
 
 Testing
 ===========

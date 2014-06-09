@@ -3,14 +3,12 @@ describe("PhotoCropper", function() {
   var originalPhoto;
   var primaryCrop;
   var thumbnailCrop;
-  var sliceCrop;
   var saveButton;
 
   beforeEach(function() {
-    originalPhoto = affix('img.photo-cropper-original-photo[src="http://placehold.it/100x100"][data-cloudinary-name="cloudinary-name"][data-public-id="original_photo_public_id"][data-original-width="100"][data-original-height="100"]');
+    originalPhoto = affix('img.photo-cropper-original-photo[src="http://placehold.it/100x100"][data-original-width="100"][data-original-height="100"]');
     primaryCrop = affix('img.crop-selection[data-crop-type="primary"]');
     thumbnailCrop = affix('img.crop-selection[data-crop-type="thumbnail"]');
-    sliceCrop = affix('img.crop-selection[data-crop-type="slice"]');
     saveButton = affix('a.save-crop');
     affix('input#crops[type="hidden"]');
     subject.defaults.debug = false;
@@ -22,6 +20,7 @@ describe("PhotoCropper", function() {
       spyOn(subject, "initOptions");
       spyOn(subject, "cacheElements");
       spyOn(subject, "initEventHandlers");
+      spyOn(subject, "initPhoto");
       subject.init();
     });
 
@@ -39,6 +38,10 @@ describe("PhotoCropper", function() {
 
     it("sets up event handlers", function() {
       expect(subject.initEventHandlers).toHaveBeenCalled();
+    });
+
+    it("initializes the photo", function() {
+      expect(subject.initPhoto).toHaveBeenCalled();
     });
   });
 
@@ -69,6 +72,37 @@ describe("PhotoCropper", function() {
         crops: {
           primary: { ratio: 7/3 }
         }
+      });
+    });
+  });
+
+  describe("initPhoto", function() {
+    beforeEach(function() {
+      subject.initOptions();
+      subject.cacheElements();
+      spyOn(subject, "parseCloudinaryUrl");
+    });
+
+    describe("with no initial src", function() {
+      beforeEach(function() {
+        subject.originalPhoto.attr("src", "");
+        subject.initPhoto();
+      });
+
+      it("should not try to parse the cloudinary url", function() {
+        expect(subject.parseCloudinaryUrl).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("with an initial src", function() {
+      var initialUrl = "http://res.cloudinary.com/cloudinary-cloud-name/image/upload/x_162,y_1500,c_crop,w_645,h_100/w_500,h_225,c_fill/v1401820250/uaqyn2dme40n21d1vmuy.jpg";
+      beforeEach(function() {
+        subject.originalPhoto.attr("src", initialUrl);
+        subject.initPhoto();
+      });
+
+      it("should try to parse the cloudinary url", function() {
+        expect(subject.parseCloudinaryUrl).toHaveBeenCalledWith(initialUrl);
       });
     });
   });
@@ -129,11 +163,16 @@ describe("PhotoCropper", function() {
     beforeEach(function() {
       subject.cacheElements();
       spyOn(subject, "reset");
+      spyOn(subject, "parseCloudinaryUrl");
       subject.updatePhoto('http://foo.com/bar.jpg');
     });
 
     it("updates the original photo source", function() {
       expect(originalPhoto.attr("src")).toEqual("http://foo.com/bar.jpg");
+    });
+
+    it("parses the the new url to set properties on the cropper", function() {
+      expect(subject.parseCloudinaryUrl).toHaveBeenCalledWith("http://foo.com/bar.jpg");
     });
 
     it("resets the cropper", function() {
@@ -192,6 +231,8 @@ describe("PhotoCropper", function() {
     beforeEach(function() {
       subject.initOptions();
       subject.cacheElements();
+      subject.cloudinaryCloudName = "cloudinary-name";
+      subject.cloudinaryPublicId = "original_photo_public_id";
       subject.cropInput.val(JSON.stringify(coordinateInfo));
     });
 
@@ -203,6 +244,7 @@ describe("PhotoCropper", function() {
   });
 
   describe("updateCropImage", function() {
+    var croppedUpdateHandler = jasmine.createSpy();
     var coordinateInfo = {
       primary: {
         x: 162,
@@ -216,6 +258,7 @@ describe("PhotoCropper", function() {
       subject.initOptions();
       subject.cacheElements();
       subject.cropInput.val(JSON.stringify(coordinateInfo));
+      subject.cropInput.on("photo-cropper:crop-updated", croppedUpdateHandler);
       subject.updateCropImage("primary");
     });
 
@@ -223,6 +266,10 @@ describe("PhotoCropper", function() {
       expect(primaryCrop.attr("src")).toEqual(
         "http://res.cloudinary.com/cloudinary-name/image/upload/x_162,y_71,c_crop,w_3889,h_1500/w_645,c_fill/original_photo_public_id.jpg"
       );
+    });
+
+    it("calls the cropped update handler", function() {
+      expect(croppedUpdateHandler).toHaveBeenCalled();
     });
   });
 
@@ -433,6 +480,60 @@ describe("PhotoCropper", function() {
 
     it("rounds all the values returned from Jcrop", function() {
       expect(subject.roundCoordinates(coordinates)).toEqual(roundedCoordinates);
+    });
+  });
+
+  describe("parseCloudinaryUrl", function() {
+    beforeEach(function() {
+      subject.cloudinaryVersion = "";
+      subject.cloudinaryPublicId = "";
+      subject.cloudinaryCloudName = "";
+      spyOn(console, "error");
+    });
+
+    it("logs a console error if cloudinary url invalid", function() {
+      subject.parseCloudinaryUrl("http://res.cloudinary.com/cloudinary-cloud-name/foo.jpg");
+      expect(console.error).toHaveBeenCalledWith("Invalid cloudinary image url");
+    });
+
+    it("parses a cloudinary URL with no transformations and no file extension", function() {
+      subject.parseCloudinaryUrl("http://res.cloudinary.com/cloudinary-cloud-name/image/upload/v1401820250/uaqyn2dme40n21d1vmuy");
+      expect(subject.cloudinaryVersion).toEqual("1401820250");
+      expect(subject.cloudinaryPublicId).toEqual("uaqyn2dme40n21d1vmuy");
+      expect(subject.cloudinaryCloudName).toEqual("cloudinary-cloud-name");
+    });
+
+    it("parses a cloudinary URL with no transformations", function() {
+      subject.parseCloudinaryUrl("http://res.cloudinary.com/cloudinary-cloud-name/image/upload/v1401820250/uaqyn2dme40n21d1vmuy.jpg");
+      expect(subject.cloudinaryVersion).toEqual("1401820250");
+      expect(subject.cloudinaryPublicId).toEqual("uaqyn2dme40n21d1vmuy");
+      expect(subject.cloudinaryCloudName).toEqual("cloudinary-cloud-name");
+    });
+
+    it("parses a cloudinary URL with a single transformation", function() {
+      subject.parseCloudinaryUrl("http://res.cloudinary.com/cloudinary-cloud-name/image/upload/x_162,y_1500,c_crop,w_645,h_100/v1401820250/uaqyn2dme40n21d1vmuy.jpg");
+      expect(subject.cloudinaryVersion).toEqual("1401820250");
+      expect(subject.cloudinaryPublicId).toEqual("uaqyn2dme40n21d1vmuy");
+      expect(subject.cloudinaryCloudName).toEqual("cloudinary-cloud-name");
+    });
+
+    it("parses a cloudinary URL with multiple transformations", function() {
+      subject.parseCloudinaryUrl("http://res.cloudinary.com/cloudinary-cloud-name/image/upload/x_162,y_1500,c_crop,w_645,h_100/w_500,h_225,c_fill/v1401820250/uaqyn2dme40n21d1vmuy.jpg");
+      expect(subject.cloudinaryVersion).toEqual("1401820250");
+      expect(subject.cloudinaryPublicId).toEqual("uaqyn2dme40n21d1vmuy");
+      expect(subject.cloudinaryCloudName).toEqual("cloudinary-cloud-name");
+    });
+  });
+
+  describe("cropTransformation", function() {
+    it("returns the expected c_crop format for the cloudinary crop transformation", function() {
+      expect(subject.cropTransformation({ x: 62, y: 150, w: 500, h: 560 })).toEqual("/x_62,y_150,c_crop,w_500,h_560");
+    });
+  });
+
+  describe("resizeTransformation", function() {
+    it("returns the expected format to resize the image post cropping", function() {
+      expect(subject.resizeTransformation("primary")).toEqual("/w_645,c_fill/");
     });
   });
 });

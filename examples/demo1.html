@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <script src="../vendor/jquery/dist/jquery.js"></script>
+    <script src="../vendor/underscore/underscore.js"></script>
+    <script src="../lib/jquery.jcrop.js"></script>
+    <script src="../lib/photo_cropper.js"></script>
+    <script src="js/demo.js"></script>
+
+    <link rel="stylesheet" href="css/jquery.jcrop.css">
+    <link rel="stylesheet" href="css/demo.css">
+  </head>
+
+  <body>
+    <div class="cloudinary-metadata">
+      Enter information on the cloudinary image you'd like to crop:
+      <input type="text" id="cloudinary-image-url" placeholder="Enter Cloudinary image URL (http://res.cloudinary.com/my-cloud-name/image/upload/v1399562437/okkrojqqgmezu0dllvhm.jpg)" />
+      <input type="text" id="cloudinary-image-orig-width" placeholder="Enter Cloudinary image original width" />
+      <input type="text" id="cloudinary-image-orig-height" placeholder="Enter Cloudinary image original height" />
+
+      <button type="button" id="set-cloudinary-image">Set image to crop</button>
+    </div>
+
+    <div class="photo-cropper">
+      <div class="crop-canvas">
+        <img id="article-primary-photo" class="photo-cropper-original-photo" data-original-height="" data-original-width="" src="http://placehold.it/800x400" width="800">
+      </div>
+      <div class="crop-selections">
+        <a class="save-crop" href="#">Save Crop</a>
+        <input id="crops" name="crops" type="hidden" value="{}">
+        <p>Preview</p>
+        Stored crop info:
+        <pre id="demo-crop-info"></pre>
+        <div class="primary">
+          <p>Primary</p>
+          <img class="crop-selection" data-crop-type="primary" id="primary-crop" src="http://placehold.it/645x375">
+        </div>
+        <div class="thumbnail">
+          <p>Thumbnail</p>
+          <img class="crop-selection" data-crop-type="thumbnail" id="thumbnail-crop" src="http://placehold.it/60x60">
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      $('#set-cloudinary-image').on('click', function() {
+        var url = $('#cloudinary-image-url').val();
+        PhotoCropper.updatePhoto(url);
+        PhotoCropper.originalPhoto.data('original-width', $('#cloudinary-image-orig-width').val());
+        PhotoCropper.originalPhoto.data('original-height', $('#cloudinary-image-orig-height').val());
+      });
+
+      PhotoCropper.init();
+      updateHighlightedCrops();
+      PhotoCropper.cropInput.on("photo-cropper:crop-updated", updateHighlightedCrops);
+    </script>
+  </body>
+</html>

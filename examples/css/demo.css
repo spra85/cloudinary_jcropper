@@ -1,0 +1,50 @@
+#cloudinary-image-url {
+  width: 75%;
+}
+
+.cloudinary-metadata input {
+  display: block;
+  margin: 10px;
+  width: 300px;
+}
+
+.cloudinary-metadata button {
+  margin: 10px;
+}
+
+.body {
+  width: 100%;
+}
+
+.crop-canvas {
+  float: left;
+}
+
+.crop-selections {
+  float: left;
+}
+
+.crop-selections p {
+  padding: 7px;
+}
+
+.crop-selections .save-crop {
+  float: left;
+  margin-left: 7px;
+}
+
+.crop-selections div {
+  float: left;
+  padding: 20px;
+}
+
+.crop-selections img {
+  cursor: pointer;
+}
+
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
