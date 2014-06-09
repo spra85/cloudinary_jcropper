@@ -31,6 +31,18 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
+                <h3>
+        <a name="photo-cropper-options" class="anchor" href="#photo-cropper-options"><span class="octicon octicon-link"></span></a>Cropper options</h3>
+          <ul>
+            <li>debug - If true, will log crop coordinates as they change. (true|false, Default: false)</li>
+            <li>crops - Hash containing aspect ratio and width of each configured crop type. Default: (primary: { ratio: 4 / 3, width: 600 },
+              thumbnail: { ratio: 1, width: 60 })
+            </li>
+            <li>originalPhotoSelector - Selector used to configure original photo to crop.  Default: ".photo-cropper-original-photo"</li>
+            <li>cropOptionSelector - Selector used to configure each available crop type.  Default: ".crop-selection"</li>
+            <li>saveCropSelector - Selector used to configure save button for crop(s).  Default: ".save-crop"</li>
+            <li>cropInputSelector - Selector used to configure input field to store crop coordinates for each configured type.  Default: "#crops"</li>
+          </ul>
         <h3>
 <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Click below to try a few demos of the cropper in action</h3>
         <p>
