@@ -238,7 +238,7 @@ describe("PhotoCropper", function() {
 
     it("returns the generated cloudinary url with crop transformations", function() {
       expect(subject.generateCloudinaryUrl("primary")).toEqual(
-        "http://res.cloudinary.com/cloudinary-name/image/upload/x_162,y_71,c_crop,w_3889,h_1506/w_645,c_fill/original_photo_public_id.jpg"
+        "http://res.cloudinary.com/cloudinary-name/image/upload/x_162,y_71,c_crop,w_3889,h_1506/w_600,c_fill/original_photo_public_id.jpg"
       );
     });
   });
@@ -264,7 +264,7 @@ describe("PhotoCropper", function() {
 
     it("updates the src of the cropped image", function() {
       expect(primaryCrop.attr("src")).toEqual(
-        "http://res.cloudinary.com/cloudinary-name/image/upload/x_162,y_71,c_crop,w_3889,h_1500/w_645,c_fill/original_photo_public_id.jpg"
+        "http://res.cloudinary.com/cloudinary-name/image/upload/x_162,y_71,c_crop,w_3889,h_1500/w_600,c_fill/original_photo_public_id.jpg"
       );
     });
 
@@ -533,7 +533,7 @@ describe("PhotoCropper", function() {
 
   describe("resizeTransformation", function() {
     it("returns the expected format to resize the image post cropping", function() {
-      expect(subject.resizeTransformation("primary")).toEqual("/w_645,c_fill/");
+      expect(subject.resizeTransformation("primary")).toEqual("/w_600,c_fill/");
     });
   });
 });
